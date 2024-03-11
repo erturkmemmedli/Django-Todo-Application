@@ -1,0 +1,49 @@
+{% extends "todo/base.html" %}
+
+{% block content %}
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-5">
+            <h2>New Todo</h2>
+        </div>
+    </div>
+    <div class="row justify-content-center mt-5">
+        <div class="col-md-5">
+            {% if error %}
+                <div class="alert alert-danger" role="alert">
+                    {{ error }}
+                </div>
+            {% endif %}
+            <form id="todoForm" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="title">Title</label>
+                    <input type="text" name="title" class="form-control" id="title" value="{{ todo.title }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea name="description" rows="5" class="form-control" id="description" >{{ todo.description }}</textarea>
+                </div>
+                <div class="form-group form-check">
+                    <input type="checkbox" name="important" class="form-check-input" id="important" {% if todo.important %}checked{% endif %}>
+                    <label class="form-check-label" for="important">Important</label>
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-success" onclick="completeTodo()">Complete</button>
+                <button type="button" class="btn btn-danger" onclick="deleteTodo()">Delete</button>
+            </form>
+        </div>
+    </div>
+    <script>
+    function completeTodo() {
+        document.getElementById("todoForm").action = "{% url 'completetodo' todo.id %}";
+        document.getElementById("todoForm").submit();
+    }
+
+    function deleteTodo() {
+        document.getElementById("todoForm").action = "{% url 'deletetodo' todo.id %}";
+        document.getElementById("todoForm").submit();
+    }
+    </script>
+{% endblock %}
+
+
